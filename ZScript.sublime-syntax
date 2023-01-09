@@ -1,0 +1,5 @@
+%YAML 1.2
+---
+name: ZScript
+file_extensions: [zs, zsc, zc]
+scope: source.zs
