@@ -2,4 +2,4 @@
 GZDoom ZScript Syntax Highlighting for Sublime Text
 
 ## Credits
-Caligari for Regexes
+Caligari for some of the base regexes
