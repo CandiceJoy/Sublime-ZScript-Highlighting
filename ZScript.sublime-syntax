@@ -1,5 +1,113 @@
-%YAML 1.2
+cp %YAML 1.2
 ---
+# See http://www.sublimetext.com/docs/syntax.html
 name: ZScript
-file_extensions: [zs, zsc, zc]
+file_extensions:
+  - zc
+  - zsc
+  - zs
 scope: source.zs
+contexts:
+  main:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character
+    - match: '"'
+      scope: punctuation.definition.string.begin.zs
+      push: double_quoted_string
+
+    # Comments begin with a '//' and finish at the end of the line
+    - match: '//.*?(\n|$)'
+      scope: punctuation.definition.comment.zs
+#      push: line_comment
+
+    # Comments begin with a '/*' and finish with a '*/'
+    - match: '/\*'
+      scope: punctuation.definition.comment.zs
+      push: multiline_comment
+
+    # Keywords are if, else for and while.
+    # Note that blackslashes don't need to be escaped within single quoted
+    # strings in YAML. When using single quoted strings, only single quotes
+    # need to be escaped: this is done by using two single quotes next to each
+    # other.
+    - match: '\b(?i)(if|else|for|while|do|switch|case|return)\b'
+      scope: keyword.control.zs
+
+    # Numbers
+    - match: '\b-?[0-9.]+\b'
+      scope: constant.numeric.zs
+
+    - match: '(?i)\b(0x[A-Fa-f0-9_]+)\b'
+      scope: constant.numeric.integer.hexadecimal.zs
+
+    - match: '(?i)\b(0b[0-1_]+)[FL]?\b'
+      scope: constant.numeric.integer.binary.zs
+
+    - match: '(?i)([^\s]+)(<)([^\s]+)(>)'
+      captures:
+        1: entity.name.type.zs
+        2: keyword.operator.arithmetic.zs
+        3: entity.name.type.zs
+        4: keyword.operator.arithmetic.zs
+
+#TODO: (struct|extend|clearscope|ui|play|meta|in|out|is|let|self|enum)
+      #class types
+    - match: '\b(?i)(Super|ThinkerIterator|Sector|class|Bot|Player(Info)?|Actor|Object|Vector2|Vector3|PSprite|Weapon)\b'
+      scope: entity.name.type.zs
+
+      #primitive types
+    - match: '\b(?i)(Name|String|Color|Sound|Double|Bool|int|float|float64|uint8|uint16|uint|int8|int16|TextureID|SpriteID|Array|voidptr|short|action|state|statelabel)\b'
+      scope: storage.type.zs
+
+    - match: '\b(?i)(true|false|null)\b'
+      scope: constant.other.zs
+
+    - match: '\b(?i)(clearscope|flagdef|meta|native|override|public|void|private|static|default|states|const|protected|abstract|replaces|readonly|deprecated|virtual(scope)?|property|in|out|vararg)\b'
+      scope: storage.type.trait.zs
+
+#    - match: '(?i)[\.]?([a-z0-9_]+[ ]*)(?=[(]+)'
+#      captures:
+#        1: entity.name.function.zs
+
+    - match: '(?i)([a-z0-9.]+):'
+      captures:
+        1: entity.name.tag.zs
+
+    - match: '(?i)goto [a-z0-9]+[\\+0-9]*'
+      scope: entity.name.tag.zs
+
+    - match: '(?i)#include'
+      scope: meta.preprocessor.zs
+
+    - match: '(?i)version'
+      scope: meta.preprocessor.zs
+
+    - match: '[\\?:!&]'
+      scope: keyword.operator.zs
+
+    - match: '[\*\+-\/%~<>=|]'
+      scope: keyword.operator.arithmetic.zs
+
+#    - match: '(?i)\sclass +([a-z0-9_]+) *((:) +[a-z0-9.]+)?'
+#      scope: entity.name.class.zs
+#      captures:
+#        1: storage.name.class.zs
+#        3: entity.other.inherited-class.zs
+
+  line_comment:
+    - meta_scope: comment.line.zs
+    - match: '\/\/.*?(\n|$)'
+      pop: true
+
+  multiline_comment:
+    - meta_scope: punctuation.definition.comment.zs
+    - match: '\*/'
+      pop: true
+
+  double_quoted_string:
+    - meta_scope: string.quoted.double.zs
+    - match: '\\.'
+      scope: constant.character.escape.zs
+    - match: '"'
+      scope: punctuation.definition.string.end.zs
+      pop: true
