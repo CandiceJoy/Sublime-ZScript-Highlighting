@@ -1,0 +1,14 @@
+{
+  "name": "ZScript Web Parser",
+  "version": "1.0.0",
+  "dependencies": {
+    "fetch": "^1.1.0",
+    "jsdom": "^20.0.0",
+    "node-fetch": "^3.2.10"
+  },
+  "scripts": {
+	"start": "node main.js"
+  },
+  "type": "module"
+}
+
